@@ -1,5 +1,5 @@
 'use strict';
-
+require('dotenv').config();
 const { DATABASE } = require('./config');
 const knex = require('knex')(DATABASE);
 
