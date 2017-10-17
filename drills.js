@@ -2,6 +2,8 @@
 require('dotenv').config();
 const { DATABASE } = require('./config');
 const knex = require('knex')(DATABASE);
+const Treeize = require('treeize');
+const tree = new Treeize();
 
 // clear the console before each run
 process.stdout.write('\x1Bc');
@@ -76,6 +78,48 @@ process.stdout.write('\x1Bc');
 //   .where('id', 22)
 //   .del()
 //   .then(result => console.log(result));
+
+// knex.select('restaurants.id', 'name', 'grades.id as gradeId', 'grade')
+//   .from('restaurants')
+//   .innerJoin('grades', 'restaurants.id', 'grades.restaurant_id')
+//   .then(result => console.log(result));
+
+knex.select('restaurants.id', 'name', 'cuisine', 'borough', 'grades.id as gradeId', 'grade', 'score')
+  .from('restaurants')
+  .innerJoin('grades', 'restaurants.id', 'grades.restaurant_id')
+  .where('restaurants.id', '16')
+  .orderBy('date', 'asc')
+  .limit(100)
+  .then(results => {
+    console.log(results);
+    tree.grow(results);
+    // console.log(tree.getData());
+  });
+
+// tree.grow([
+//   { 'foo': 'bar', 'logs:a': 1 },
+//   { 'foo': 'bar', 'logs:a': 2 },
+//   { 'foo': 'baz', 'logs:a': 3 },
+// ]);
+
+
+//HYDRATION METHOD
+// const hydrated = {};
+// results
+//   .forEach(row => {
+//     const {id, name, cuisine, borough,} = row;
+//     if(!(id in hydrated)){
+//       hydrated[id] = {
+//         name,
+//         cuisine,
+//         borough,
+//         grades: []
+//       }; 
+//     }
+//     hydrated[row.id].grades.push({gradeId: row.id, grade: row.grade});
+//   });
+//   console.log(JSON.stringify(hydrated, null, 2));
+// });
 
 // Destroy the connection pool
 knex.destroy().then(() => {
