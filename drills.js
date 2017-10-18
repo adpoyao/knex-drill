@@ -84,16 +84,29 @@ process.stdout.write('\x1Bc');
 //   .innerJoin('grades', 'restaurants.id', 'grades.restaurant_id')
 //   .then(result => console.log(result));
 
-knex.select('restaurants.id', 'name', 'cuisine', 'borough', 'grades.id as gradeId', 'grade', 'score')
+// OLD ANSWER THAT DOESN'T WORK
+//  knex.select('restaurants.id', 'name', 'cuisine', 'borough', 'grades.id as gradeId', 'grade', 'score')
+//   .from('restaurants')
+//   .innerJoin('grades', 'restaurants.id', 'grades.restaurant_id')
+//   .where('restaurants.id', '16')
+//   .orderBy('date', 'asc')
+//   .limit(100)
+//   .then(results => {
+//     tree.grow(results);
+//     console.log(tree.getData());
+//   });
+
+
+knex.select('restaurants.id as id', 'name', 'cuisine', 'borough', 'grades.id as restaurant:grades:id', 'grade as restaurant:grades:grade', 'score as restaurant:scores')
   .from('restaurants')
   .innerJoin('grades', 'restaurants.id', 'grades.restaurant_id')
   .where('restaurants.id', '16')
   .orderBy('date', 'asc')
   .limit(100)
   .then(results => {
-    console.log(results);
+    //console.log(results.map(item => item));
     tree.grow(results);
-    // console.log(tree.getData());
+    console.log(JSON.stringify(tree.getData(), null, 2));
   });
 
 // tree.grow([
